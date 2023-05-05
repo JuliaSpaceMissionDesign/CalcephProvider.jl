@@ -1,4 +1,4 @@
-module CalcephProvider 
+module CalcephEphemeris 
 
 export CalcephProvider
 

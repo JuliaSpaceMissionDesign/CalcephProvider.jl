@@ -1,3 +1,3 @@
-# CalcephProvider.jl 
+# CalcephEphemeris.jl 
 
 _A lightweight CALCEPH.jl wrapper for the JSMD ecosystem._

@@ -1,16 +1,16 @@
-using CalcephProvider 
+using CalcephEphemeris 
 using Documenter 
 
 makedocs(;
     authors="Julia Space Mission Design Development Team",
-    sitename="CalcephProvider.jl",
-    modules=[CalcephProvider],
+    sitename="CalcephEphemeris.jl",
+    modules=[CalcephEphemeris],
     pages=[
         "Home" => "index.md",
     ],
 )
 
 deploydocs(; 
-    repo = "github.com/JuliaSpaceMissionDesign/CalcephProvider.jl",
+    repo = "github.com/JuliaSpaceMissionDesign/CalcephEphemeris.jl",
     branch = "gh-pages",
 )

@@ -1,6 +1,6 @@
-using CalcephProvider
+using CalcephEphemeris
 using Test 
 
-@testset "CalcephProvider.jl" begin     
+@testset "CalcephEphemeris.jl" begin     
     # Write your tests here.
 end
