@@ -1,6 +1,11 @@
 module CalcephEphemeris 
 
-export CalcephProvider
+export CalcephProvider, 
+    load,
+    ephem_compute!, 
+    ephem_orient!, 
+    ephem_position_records, 
+    ephem_orient_records
 
 using CALCEPH:
     Ephem as CalcephEphemHandler,
@@ -16,8 +21,19 @@ using CALCEPH:
     unitSec,
     unitRad
 
-using SMDInterfacesUtils 
-
+import SMDInterfacesUtils.Interfaces.Ephemeris: 
+    AbstractEphemerisProvider,
+    EphemerisError,
+    load, 
+    ephem_position_records, 
+    ephem_orient_records,
+    ephem_available_points,
+    ephem_available_axes,
+    ephem_timespan,
+    ephem_timescale,
+    ephem_compute!,
+    ephem_orient!
+    
 """
     CalcephProvider(file::String)
     CalcephProvider(files::Vector{String})
@@ -147,8 +163,9 @@ function ephem_timescale(eph::CalcephProvider)
         return TCB
     else
         throw(
-            GenericError(
-                String(Symbol(@__MODULE__)), "unknown time scale identifier: $tsid"
+            EphemerisError(
+                String(Symbol(@__MODULE__)), 
+                "unknown time scale identifier: $tsid"
             ),
         )
     end

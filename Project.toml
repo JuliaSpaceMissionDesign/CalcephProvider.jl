@@ -4,9 +4,13 @@ authors = ["Andrea Pasquale <andrea.pasquale@polimi.it> and Michele Ceresoli <mi
 version = "1.0.0"
 
 [deps]
+CALCEPH = "1537fe66-4725-5aba-80f4-3a74792cecc1"
+SMDInterfacesUtils = "a641f28f-8d9e-4160-8071-676a3167f41f"
 
 [compat]
 julia = "1"
+SMDInterfacesUtils = "1"
+CALCEPH = "1.1"
 
 [extras]
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
