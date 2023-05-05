@@ -6,4 +6,4 @@
 [![codecov](https://codecov.io/gh/JuliaSpaceMissionDesign/CalcephEphemeris.jl/branch/main/graph/badge.svg?token=3SJCV229XX)](https://codecov.io/gh/JuliaSpaceMissionDesign/CalcephEphemeris.jl)
 [![Code Style: Blue](https://img.shields.io/badge/code%20style-blue-4495d1.svg)](https://github.com/invenia/BlueStyle)
 
-_A lightweight CALCEPH.jl wrapper for the JSMD ecosystem._
+_A lightweight CALCEPH.jl wrapper for the JSMD ecosystem._ 
