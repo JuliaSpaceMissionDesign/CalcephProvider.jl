@@ -1,7 +1,7 @@
 name = "CalcephEphemeris"
 uuid = "54e8752a-b65a-4aac-bda5-4918ee1e3cc5"
 authors = ["Andrea Pasquale <andrea.pasquale@polimi.it> and Michele Ceresoli <michele.ceresoli@polimi.it>"]
-version = "1.0.0"
+version = "1.1.0"
 
 [deps]
 CALCEPH = "1537fe66-4725-5aba-80f4-3a74792cecc1"
