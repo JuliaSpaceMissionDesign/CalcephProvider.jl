@@ -157,10 +157,9 @@ Retrieve `Basic` timescale associated with ephemeris handler `eph`.
 """
 function ephem_timescale(eph::CalcephProvider)
     tsid = timeScale(eph.ptr)
-    if tsid == 1
-        return TDB
-    elseif tsid == 2
-        return TCB
+
+    if tsid == 1 || tsid == 2
+        return tsid
     else
         throw(
             EphemerisError(
@@ -169,6 +168,7 @@ function ephem_timescale(eph::CalcephProvider)
             ),
         )
     end
+    
 end
 
 """
