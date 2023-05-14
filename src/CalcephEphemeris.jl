@@ -21,7 +21,7 @@ using CALCEPH:
     unitSec,
     unitRad
 
-import SMDInterfacesUtils.Interfaces.Ephemeris: 
+import JSMDInterfaces.Ephemeris: 
     AbstractEphemerisProvider,
     EphemerisError,
     load, 
