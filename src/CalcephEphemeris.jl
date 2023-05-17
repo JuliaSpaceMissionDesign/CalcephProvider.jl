@@ -1,11 +1,7 @@
-module CalcephEphemeris 
+module CalcephEphemeris
 
-export CalcephProvider, 
-    load,
-    ephem_compute!, 
-    ephem_orient!, 
-    ephem_position_records, 
-    ephem_orient_records
+export CalcephProvider,
+    load, ephem_compute!, ephem_orient!, ephem_position_records, ephem_orient_records
 
 using CALCEPH:
     Ephem as CalcephEphemHandler,
@@ -20,12 +16,11 @@ using CALCEPH:
     unitKM,
     unitSec,
     unitRad,
-    OrientationRecord, 
+    OrientationRecord,
     PositionRecord
 
-import JSMDInterfaces.Ephemeris as jEph;
+import JSMDInterfaces.Ephemeris as jEph
 
-    
 """
     CalcephProvider(file::String)
     CalcephProvider(files::Vector{String})
@@ -62,25 +57,24 @@ function jEph.load(::Type{CalcephProvider}, files::Vector{<:AbstractString})
     return CalcephProvider(files)
 end
 
-
 function Base.convert(::Type{jEph.EphemPointRecord}, r::PositionRecord)
-    jEph.EphemPointRecord(r.target, r.center, r.startEpoch, r.stopEpoch, r.frame)
+    return jEph.EphemPointRecord(r.target, r.center, r.startEpoch, r.stopEpoch, r.frame)
 end
 
 function Base.convert(::Type{jEph.EphemAxesRecord}, r::OrientationRecord)
-    jEph.EphemAxesRecord(r.target, r.startEpoch, r.stopEpoch, r.frame)
+    return jEph.EphemAxesRecord(r.target, r.startEpoch, r.stopEpoch, r.frame)
 end
 
 """
     ephem_position_records(eph::CalcephProvider)
 
-Get an array of `CALCEPH.PositionRecord`, providing detailed informations on the content of 
-the ephemeris file.
+Get an array of [`jEph.EphemPointRecord`](@ref), providing detailed informations on the 
+position content of the ephemeris file.
 """
-function jEph.ephem_position_records(eph::CalcephProvider) 
-    try 
+function jEph.ephem_position_records(eph::CalcephProvider)
+    try
         convert.(jEph.EphemPointRecord, positionRecords(eph.ptr))
-    catch 
+    catch
         jEph.EphemPointRecord[]
     end
 end
@@ -91,25 +85,23 @@ end
 Return a list of NAIFIds representing bodies with available ephemeris data. 
 """
 function jEph.ephem_available_points(eph::CalcephProvider)
-
     rec = jEph.ephem_position_records(eph)
     tids = map(x -> x.target, rec)
     cids = map(x -> x.center, rec)
 
     return unique([tids..., cids...])
-
 end
 
 """
     ephem_orient_records(eph::CalcephProvider)
 
-Get ephemeris an array of `CALCEPH.OrientationRecord`s, providing detailed 
-informations on the content of the ephemeris file.
+Get an array of [`jEph.EphemAxesRecord`](@ref), providing detailed 
+informations on the orientation content of the ephemeris file.
 """
-function jEph.ephem_orient_records(eph::CalcephProvider) 
-    try 
+function jEph.ephem_orient_records(eph::CalcephProvider)
+    try
         convert.(jEph.EphemAxesRecord, orientationRecords(eph.ptr))
-    catch 
+    catch
         jEph.EphemAxesRecord[]
     end
 end
@@ -120,9 +112,8 @@ end
 Return a list of Frame IDs representing axes with available orientation data. 
 """
 function jEph.ephem_available_axes(eph::CalcephProvider)
-
     rec = jEph.ephem_orient_records(eph)
-    
+
     tids = map(x -> x.target, rec)
     cids = map(x -> x.axes, rec)
 
@@ -133,24 +124,14 @@ end
     ephem_timespan(eph::CalcephProvider)
 
 Returns the first and last time available in the ephemeris file associated to 
-an ephemeris file.
+an ephemeris file. It returns a tuple containing:
 
-### Input/s:
+- `firsttime` -- Julian date of the first time.
+- `lasttime` -- Julian date of the last time.
+- `continuous` -- Information about the availability of the quantities over the 
+                  time span. It equals:
 
-- `eph` : ephemeris
-
-### Output/s:
-
-Returns a tuple containing:
-
-- `firsttime` -- Julian date of the first time
-- `lasttime` -- Julian date of the last time
-- `continuous` -- information about the availability of the quantities over the 
-                  time span
-    
-    It returns the following value in the parameter continuous :
-
-        1. if the quantities of all bodies are available for any time between 
+        - 1. if the quantities of all bodies are available for any time between 
             the first and last time.
         2. if the quantities of some bodies are available on discontinuous time 
             intervals between the first and last time.
@@ -164,7 +145,11 @@ jEph.ephem_timespan(eph::CalcephProvider) = timespan(eph.ptr)
 """
     ephem_timescale(eph::CalcephProvider) 
 
-Retrieve `Basic` timescale associated with ephemeris handler `eph`.
+Retrieve a timescale ID associated with the ephemeris handler `eph`. 
+It returns 1 for Barycentric Dynamical Time (TDB) and 2 for Barycentric Coordinate Time (TCB).
+
+!!! warning 
+    An error is thrown if the timescale is neither TDB nor TCB.
 """
 function jEph.ephem_timescale(eph::CalcephProvider)
     tsid = timeScale(eph.ptr)
@@ -174,12 +159,10 @@ function jEph.ephem_timescale(eph::CalcephProvider)
     else
         throw(
             jEph.EphemerisError(
-                String(Symbol(@__MODULE__)), 
-                "unknown time scale identifier: $tsid"
+                String(Symbol(@__MODULE__)), "unknown time scale identifier: $tsid"
             ),
         )
     end
-    
 end
 
 """
@@ -205,14 +188,21 @@ See also [`ephem_orient!`](@ref)
 function jEph.ephem_compute!(
     res,
     eph::CalcephProvider,
-    jd0::Float64,
-    time::Float64,
+    jd0::Number,
+    time::Number,
     target::Int,
     center::Int,
     order::Int,
 )
     stat = unsafe_compute!(
-        res, eph.ptr, jd0, time, target, center, useNaifId + unitKM + unitSec, order
+        res,
+        eph.ptr,
+        Float64(jd0),
+        Float64(time),
+        target,
+        center,
+        useNaifId + unitKM + unitSec,
+        order,
     )
     stat == 0 && throw(
         jEph.EphemerisError(
@@ -246,10 +236,16 @@ The values stores in `res` are always returned in rad, rad/s, rad/s², rad/s³
 See also [`ephem_orient!`](@ref)
 """
 function jEph.ephem_orient!(
-    res, eph::CalcephProvider, jd0::Float64, time::Float64, target::Int, order::Int
+    res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, order::Int
 )
     stat = unsafe_orient!(
-        res, eph.ptr, jd0, time, target, useNaifId + unitRad + unitSec, order
+        res,
+        eph.ptr,
+        Float64(jd0),
+        Float64(time),
+        target,
+        useNaifId + unitRad + unitSec,
+        order,
     )
     stat == 0 && throw(
         jEph.EphemerisError(
@@ -260,6 +256,5 @@ function jEph.ephem_orient!(
     )
     return nothing
 end
-
 
 end
