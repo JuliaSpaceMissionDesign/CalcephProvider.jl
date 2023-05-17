@@ -70,8 +70,8 @@ end;
     for (rec, recc) in zip(orec, corec) 
         @test rec.target == recc.target
         @test rec.axes == recc.frame 
-        @test rec.start_epoch == recc.startEpoch 
-        @test rec.stop_epoch == recc.stopEpoch
+        @test rec.jd_start == recc.startEpoch 
+        @test rec.jd_stop == recc.stopEpoch
     end
 
     y = zeros(6)
