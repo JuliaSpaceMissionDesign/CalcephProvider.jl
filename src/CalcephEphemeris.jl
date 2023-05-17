@@ -130,12 +130,12 @@ an ephemeris file. It returns a tuple containing:
 - `lasttime` -- Julian date of the last time.
 - `continuous` -- Information about the availability of the quantities over the 
                   time span. It equals:
-
-        - 1. if the quantities of all bodies are available for any time between 
+                  
+        - `1`: if the quantities of all bodies are available for any time between 
             the first and last time.
-        2. if the quantities of some bodies are available on discontinuous time 
+        - `2`: if the quantities of some bodies are available on discontinuous time 
             intervals between the first and last time.
-        3. if the quantities of each body are available on a continuous time 
+        - `3`: if the quantities of each body are available on a continuous time 
             interval between the first and last time, but not available for any 
             time between the first and last time.
 
