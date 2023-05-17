@@ -21,5 +21,5 @@ julia> Pkg.add("CalcephEphemeris.jl")
 ## Documentation 
 
 For further information on this package and on the CALCEPH library see the package [documentation](https://juliaspacemissiondesign.github.io/CalcephEphemeris.jl/stable/), 
-the offical CALCEPH [website](https://www.imcce.fr/inpop/calceph) or its original 
+the official CALCEPH [website](https://www.imcce.fr/inpop/calceph) or its original 
 [Julia wrapper](https://github.com/JuliaAstro/CALCEPH.jl) page.
