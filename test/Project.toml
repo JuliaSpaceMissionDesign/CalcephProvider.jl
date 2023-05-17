@@ -1,0 +1,5 @@
+[deps]
+CALCEPH = "1537fe66-4725-5aba-80f4-3a74792cecc1"
+JSMDInterfaces = "6b30ee2f-618e-4a15-bf4e-7df7b496e609"
+LazyArtifacts = "4af54fe1-eca0-43a8-85a7-787d91b784e3"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"

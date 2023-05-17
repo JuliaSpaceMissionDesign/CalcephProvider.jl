@@ -19,20 +19,12 @@ using CALCEPH:
     useNaifId,
     unitKM,
     unitSec,
-    unitRad
+    unitRad,
+    OrientationRecord, 
+    PositionRecord
 
-import JSMDInterfaces.Ephemeris: 
-    AbstractEphemerisProvider,
-    EphemerisError,
-    load, 
-    ephem_position_records, 
-    ephem_orient_records,
-    ephem_available_points,
-    ephem_available_axes,
-    ephem_timespan,
-    ephem_timescale,
-    ephem_compute!,
-    ephem_orient!
+import JSMDInterfaces.Ephemeris as jEph;
+
     
 """
     CalcephProvider(file::String)
@@ -54,7 +46,7 @@ julia> eph2 = CalcephProvider(["PATH_TO_KERNEL_1", "PATH_TO_KERNEL_2"])
 CalcephProvider(CALCEPH.Ephem(Ptr{Nothing} [...]))
 ```
 """
-struct CalcephProvider <: AbstractEphemerisProvider
+struct CalcephProvider <: jEph.AbstractEphemerisProvider
     ptr::CalcephEphemHandler
     function CalcephProvider(files::Vector{<:AbstractString})
         ptr = CalcephEphemHandler(unique(files))
@@ -64,8 +56,19 @@ struct CalcephProvider <: AbstractEphemerisProvider
 end
 CalcephProvider(file::AbstractString) = CalcephProvider([file])
 
-function load(::Type{CalcephProvider}, files::Vector{<:AbstractString})
+jEph.load(::Type{CalcephProvider}, file::AbstractString) = CalcephProvider(file)
+
+function jEph.load(::Type{CalcephProvider}, files::Vector{<:AbstractString})
     return CalcephProvider(files)
+end
+
+
+function Base.convert(::Type{jEph.EphemPointRecord}, r::PositionRecord)
+    jEph.EphemPointRecord(r.target, r.center, r.startEpoch, r.stopEpoch, r.frame)
+end
+
+function Base.convert(::Type{jEph.EphemAxesRecord}, r::OrientationRecord)
+    jEph.EphemAxesRecord(r.target, r.startEpoch, r.stopEpoch, r.frame)
 end
 
 """
@@ -74,23 +77,27 @@ end
 Get an array of `CALCEPH.PositionRecord`, providing detailed informations on the content of 
 the ephemeris file.
 """
-ephem_position_records(eph::CalcephProvider) = positionRecords(eph.ptr)
+function jEph.ephem_position_records(eph::CalcephProvider) 
+    try 
+        convert.(jEph.EphemPointRecord, positionRecords(eph.ptr))
+    catch 
+        jEph.EphemPointRecord[]
+    end
+end
 
 """
     ephem_available_points(eph::CalcephProvider)
 
 Return a list of NAIFIds representing bodies with available ephemeris data. 
 """
-function ephem_available_points(eph::CalcephProvider)
-    try
-        rec = ephem_position_records(eph)
-        tids = map(x -> x.target, rec)
-        cids = map(x -> x.center, rec)
+function jEph.ephem_available_points(eph::CalcephProvider)
 
-        return unique([tids..., cids...])
-    catch
-        return Int64[]
-    end
+    rec = jEph.ephem_position_records(eph)
+    tids = map(x -> x.target, rec)
+    cids = map(x -> x.center, rec)
+
+    return unique([tids..., cids...])
+
 end
 
 """
@@ -99,23 +106,27 @@ end
 Get ephemeris an array of `CALCEPH.OrientationRecord`s, providing detailed 
 informations on the content of the ephemeris file.
 """
-ephem_orient_records(eph::CalcephProvider) = orientationRecords(eph.ptr)
+function jEph.ephem_orient_records(eph::CalcephProvider) 
+    try 
+        convert.(jEph.EphemAxesRecord, orientationRecords(eph.ptr))
+    catch 
+        jEph.EphemAxesRecord[]
+    end
+end
 
 """
     ephem_available_points(eph::CalcephProvider)
 
 Return a list of Frame IDs representing axes with available orientation data. 
 """
-function ephem_available_axes(eph::CalcephProvider)
-    try
-        rec = ephem_orient_records(eph)
-        tids = map(x -> x.target, rec)
-        cids = map(x -> x.frame, rec)
+function jEph.ephem_available_axes(eph::CalcephProvider)
 
-        return unique([tids..., cids...])
-    catch
-        return Int64[]
-    end
+    rec = jEph.ephem_orient_records(eph)
+    
+    tids = map(x -> x.target, rec)
+    cids = map(x -> x.axes, rec)
+
+    return unique([tids..., cids...])
 end
 
 """
@@ -148,21 +159,21 @@ Returns a tuple containing:
             time between the first and last time.
 
 """
-ephem_timespan(eph::CalcephProvider) = timespan(eph.ptr)
+jEph.ephem_timespan(eph::CalcephProvider) = timespan(eph.ptr)
 
 """
     ephem_timescale(eph::CalcephProvider) 
 
 Retrieve `Basic` timescale associated with ephemeris handler `eph`.
 """
-function ephem_timescale(eph::CalcephProvider)
+function jEph.ephem_timescale(eph::CalcephProvider)
     tsid = timeScale(eph.ptr)
 
     if tsid == 1 || tsid == 2
         return tsid
     else
         throw(
-            EphemerisError(
+            jEph.EphemerisError(
                 String(Symbol(@__MODULE__)), 
                 "unknown time scale identifier: $tsid"
             ),
@@ -191,7 +202,7 @@ The values stores in `res` are always returned in km, km/s, km/s², km/s³
 ### See also 
 See also [`ephem_orient!`](@ref)
 """
-function ephem_compute!(
+function jEph.ephem_compute!(
     res,
     eph::CalcephProvider,
     jd0::Float64,
@@ -204,7 +215,7 @@ function ephem_compute!(
         res, eph.ptr, jd0, time, target, center, useNaifId + unitKM + unitSec, order
     )
     stat == 0 && throw(
-        EphemerisError(
+        jEph.EphemerisError(
             String(Symbol(@__MODULE__)),
             "ephemeris data for " *
             "point with NAIFId $target with respect to point $center is not available " *
@@ -234,14 +245,14 @@ The values stores in `res` are always returned in rad, rad/s, rad/s², rad/s³
 ### See also 
 See also [`ephem_orient!`](@ref)
 """
-function ephem_orient!(
+function jEph.ephem_orient!(
     res, eph::CalcephProvider, jd0::Float64, time::Float64, target::Int, order::Int
 )
     stat = unsafe_orient!(
         res, eph.ptr, jd0, time, target, useNaifId + unitRad + unitSec, order
     )
     stat == 0 && throw(
-        EphemerisError(
+        jEph.EphemerisError(
             String(Symbol(@__MODULE__)),
             "ephemeris data for " *
             "frame with NAIFId $target is not available at JD $(jd0+time)",
