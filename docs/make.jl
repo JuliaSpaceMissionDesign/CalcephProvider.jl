@@ -7,6 +7,7 @@ makedocs(;
     modules=[CalcephEphemeris],
     pages=[
         "Home" => "index.md",
+        "API" => "api.md"
     ],
 )
 
