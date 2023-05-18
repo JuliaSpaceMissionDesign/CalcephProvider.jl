@@ -157,11 +157,7 @@ function jEph.ephem_timescale(eph::CalcephProvider)
     if tsid == 1 || tsid == 2
         return tsid
     else
-        throw(
-            jEph.EphemerisError(
-                String(Symbol(@__MODULE__)), "unknown time scale identifier: $tsid"
-            ),
-        )
+        throw(jEph.EphemerisError("unknown time scale identifier: $tsid"))
     end
 end
 
@@ -206,10 +202,8 @@ function jEph.ephem_compute!(
     )
     stat == 0 && throw(
         jEph.EphemerisError(
-            String(Symbol(@__MODULE__)),
-            "ephemeris data for " *
-            "point with NAIFId $target with respect to point $center is not available " *
-            "at JD $(jd0+time)",
+            "ephemeris data for point with NAIFId $target with respect to point " *
+            "$center is not available at JD $(jd0+time)"
         ),
     )
     return nothing
@@ -249,10 +243,9 @@ function jEph.ephem_orient!(
     )
     stat == 0 && throw(
         jEph.EphemerisError(
-            String(Symbol(@__MODULE__)),
-            "ephemeris data for " *
-            "frame with NAIFId $target is not available at JD $(jd0+time)",
-        ),
+            "ephemeris data for frame with NAIFId $target is not available at " * 
+            "JD $(jd0+time)",
+        )
     )
     return nothing
 end
