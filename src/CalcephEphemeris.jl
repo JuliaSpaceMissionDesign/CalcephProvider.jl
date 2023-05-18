@@ -89,7 +89,7 @@ function jEph.ephem_available_points(eph::CalcephProvider)
     tids = map(x -> x.target, rec)
     cids = map(x -> x.center, rec)
 
-    return unique([tids..., cids...])
+    return unique(Int64[tids..., cids...])
 end
 
 """
@@ -117,7 +117,7 @@ function jEph.ephem_available_axes(eph::CalcephProvider)
     tids = map(x -> x.target, rec)
     cids = map(x -> x.axes, rec)
 
-    return unique([tids..., cids...])
+    return unique(Int64[tids..., cids...])
 end
 
 """
