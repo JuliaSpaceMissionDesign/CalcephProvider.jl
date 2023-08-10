@@ -227,7 +227,7 @@ must be equal to 3*order:
 The values stores in `res` are always returned in rad, rad/s, rad/s², rad/s³
 
 ### See also 
-See also [`ephem_orient!`](@ref)
+See also [`ephem_compute!`](@ref)
 """
 function jEph.ephem_orient!(
     res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, order::Int
