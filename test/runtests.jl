@@ -85,8 +85,8 @@ end;
     @test yc ≈ y atol=1e-11 rtol=1e-11
 
     # Axes ephemeris tests 
-    @test_throws jEphem.EphemerisError jEphem.ephem_orient!(y, pa421, 0.0, 0.0, 301, 1)
-    jEphem.ephem_orient!(y, pa421, DJ2000, 0.0, 31006, 1)
+    @test_throws jEphem.EphemerisError jEphem.ephem_orient!(y, pa421, 0.0, 0.0, 301, 0, 1)
+    jEphem.ephem_orient!(y, pa421, DJ2000, 0.0, 31006, 0, 1)
 
     CALCEPH.unsafe_orient!(yc, epho, DJ2000, 0.0, 31006, useNaifId+unitRad+unitSec, 1)
     @test yc ≈ y atol=1e-11 rtol=1e-11

@@ -210,7 +210,7 @@ function jEph.ephem_compute!(
 end
 
 """
-    ephem_orient!(res, eph, jd0, time, target, order)
+    ephem_orient!(res, eph, jd0, time, target, center, order)
 
 Interpolate the orientation and its derivatives up to `order` for the `target` body at the 
 time `jd0` + `time`, expressed as a Julian Date. This function reads the ephemeris files 
@@ -226,11 +226,15 @@ must be equal to 3*order:
 
 The values stores in `res` are always returned in rad, rad/s, rad/s², rad/s³
 
+!!! note 
+    The `center` argument is only requested for compatibility reasons but is neglected 
+    by CALCEPH. 
+
 ### See also 
 See also [`ephem_compute!`](@ref)
 """
 function jEph.ephem_orient!(
-    res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, order::Int
+    res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, ::Int, order::Int
 )
     stat = unsafe_orient!(
         res,
