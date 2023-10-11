@@ -15,6 +15,7 @@ This package is a lightweight wrapper around [CALCEPH.jl](https://github.com/Jul
 This package can be installed using Julia's package manager: 
 ```julia
 julia> import Pkg; 
+
 julia> Pkg.add("CalcephEphemeris.jl")
 ```
 
