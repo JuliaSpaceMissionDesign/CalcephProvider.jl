@@ -35,21 +35,38 @@ files specified by `files`.
 ### Example 
 ```julia-repl
 julia> eph1 = CalcephProvider("PATH_TO_KERNEL")
-CalcephProvider(CALCEPH.Ephem(Ptr{Nothing} [...]))
+1-kernel CalcephProvider
+ "PATH_TO_KERNEL"
 
 julia> eph2 = CalcephProvider(["PATH_TO_KERNEL_1", "PATH_TO_KERNEL_2"])
-CalcephProvider(CALCEPH.Ephem(Ptr{Nothing} [...]))
+2-kernel CalcephProvider:
+ "PATH_TO_KERNEL_1"
+ "PATH_TO_KERNEL_2"
 ```
 """
 struct CalcephProvider <: jEph.AbstractEphemerisProvider
     ptr::CalcephEphemHandler
+    files::Vector{String}
     function CalcephProvider(files::Vector{<:AbstractString})
-        ptr = CalcephEphemHandler(unique(files))
+        filepaths = unique(files)
+        ptr = CalcephEphemHandler(filepaths)
         prefetch(ptr)
-        return new(ptr)
+        return new(ptr, filepaths)
     end
 end
+
 CalcephProvider(file::AbstractString) = CalcephProvider([file])
+
+function Base.show(io::IO, eph::CalcephProvider)
+    print(io, "$(length(eph.files))-kernel CalcephProvider")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", eph::CalcephProvider)
+    println(io, eph, ":")
+    for file in eph.files
+        println(io, " $(repr(file))")
+    end
+end
 
 jEph.load(::Type{CalcephProvider}, file::AbstractString) = CalcephProvider(file)
 
