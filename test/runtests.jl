@@ -26,6 +26,14 @@ end;
 
     kern = jEphem.load(CalcephProvider, [path_pa421, path_de432])
 
+    # Test CalcephProvider printing
+    @test repr(de432) == "1-kernel CalcephProvider"
+    @test repr(CalcephProvider([path_de432, path_pa421])) == "2-kernel CalcephProvider"
+
+    io = IOBuffer();
+    show(IOContext(io, :limit => false), "text/plain", de432)
+    @test String(take!(io)) == "1-kernel CalcephProvider:\n \"$path_de432\"\n"
+
     points = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 199, 299, 301, 399]
     axes = [1, 31006]
 

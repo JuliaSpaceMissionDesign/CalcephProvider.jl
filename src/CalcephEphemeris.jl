@@ -35,21 +35,38 @@ files specified by `files`.
 ### Example 
 ```julia-repl
 julia> eph1 = CalcephProvider("PATH_TO_KERNEL")
-CalcephProvider(CALCEPH.Ephem(Ptr{Nothing} [...]))
+1-kernel CalcephProvider
+ "PATH_TO_KERNEL"
 
 julia> eph2 = CalcephProvider(["PATH_TO_KERNEL_1", "PATH_TO_KERNEL_2"])
-CalcephProvider(CALCEPH.Ephem(Ptr{Nothing} [...]))
+2-kernel CalcephProvider:
+ "PATH_TO_KERNEL_1"
+ "PATH_TO_KERNEL_2"
 ```
 """
 struct CalcephProvider <: jEph.AbstractEphemerisProvider
     ptr::CalcephEphemHandler
+    files::Vector{String}
     function CalcephProvider(files::Vector{<:AbstractString})
-        ptr = CalcephEphemHandler(unique(files))
+        filepaths = unique(files)
+        ptr = CalcephEphemHandler(filepaths)
         prefetch(ptr)
-        return new(ptr)
+        return new(ptr, filepaths)
     end
 end
+
 CalcephProvider(file::AbstractString) = CalcephProvider([file])
+
+function Base.show(io::IO, eph::CalcephProvider)
+    print(io, "$(length(eph.files))-kernel CalcephProvider")
+end
+
+function Base.show(io::IO, ::MIME"text/plain", eph::CalcephProvider)
+    println(io, eph, ":")
+    for file in eph.files
+        println(io, " $(repr(file))")
+    end
+end
 
 jEph.load(::Type{CalcephProvider}, file::AbstractString) = CalcephProvider(file)
 
@@ -68,7 +85,7 @@ end
 """
     ephem_position_records(eph::CalcephProvider)
 
-Get an array of [`jEph.EphemPointRecord`](@ref), providing detailed informations on the 
+Get an array of `EphemPointRecord`, providing detailed informations on the 
 position content of the ephemeris file.
 """
 function jEph.ephem_position_records(eph::CalcephProvider)
@@ -95,7 +112,7 @@ end
 """
     ephem_orient_records(eph::CalcephProvider)
 
-Get an array of [`jEph.EphemAxesRecord`](@ref), providing detailed 
+Get an array of `EphemAxesRecord`, providing detailed 
 informations on the orientation content of the ephemeris file.
 """
 function jEph.ephem_orient_records(eph::CalcephProvider)
@@ -177,9 +194,6 @@ must be equal to 3*order:
 - res[10:12] contain the jerk (d³x/dt³, d³y/dt³, d³z/dt³) for order ≥ 3
 
 The values stores in `res` are always returned in km, km/s, km/s², km/s³
-
-### See also 
-See also [`ephem_orient!`](@ref)
 """
 function jEph.ephem_compute!(
     res,
@@ -229,9 +243,6 @@ The values stores in `res` are always returned in rad, rad/s, rad/s², rad/s³
 !!! note 
     The `center` argument is only requested for compatibility reasons but is neglected 
     by CALCEPH. 
-
-### See also 
-See also [`ephem_compute!`](@ref)
 """
 function jEph.ephem_orient!(
     res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, ::Int, order::Int
