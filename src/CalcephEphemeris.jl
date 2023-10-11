@@ -85,7 +85,7 @@ end
 """
     ephem_position_records(eph::CalcephProvider)
 
-Get an array of [`jEph.EphemPointRecord`](@ref), providing detailed informations on the 
+Get an array of `EphemPointRecord`, providing detailed informations on the 
 position content of the ephemeris file.
 """
 function jEph.ephem_position_records(eph::CalcephProvider)
@@ -112,7 +112,7 @@ end
 """
     ephem_orient_records(eph::CalcephProvider)
 
-Get an array of [`jEph.EphemAxesRecord`](@ref), providing detailed 
+Get an array of `EphemAxesRecord`, providing detailed 
 informations on the orientation content of the ephemeris file.
 """
 function jEph.ephem_orient_records(eph::CalcephProvider)
@@ -194,9 +194,6 @@ must be equal to 3*order:
 - res[10:12] contain the jerk (d³x/dt³, d³y/dt³, d³z/dt³) for order ≥ 3
 
 The values stores in `res` are always returned in km, km/s, km/s², km/s³
-
-### See also 
-See also [`ephem_orient!`](@ref)
 """
 function jEph.ephem_compute!(
     res,
@@ -246,9 +243,6 @@ The values stores in `res` are always returned in rad, rad/s, rad/s², rad/s³
 !!! note 
     The `center` argument is only requested for compatibility reasons but is neglected 
     by CALCEPH. 
-
-### See also 
-See also [`ephem_compute!`](@ref)
 """
 function jEph.ephem_orient!(
     res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, ::Int, order::Int
