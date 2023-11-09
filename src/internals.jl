@@ -9,7 +9,7 @@ const useNAIFId = 32
 macro _check_status(stat, msg)
     return quote 
         if ($(esc(stat)) == 0)
-            throw(EphemerisError($(esc(msg))))
+            throw(jEph.EphemerisError($(esc(msg))))
         end 
     end
 end
@@ -17,7 +17,7 @@ end
 macro _check_pointer(ptr, msg)
     return quote 
         if ($(esc(ptr)) == C_NULL)
-            throw(EphemerisError($(esc(msg))))
+            throw(jEph.EphemerisError($(esc(msg))))
         end
     end
 end
