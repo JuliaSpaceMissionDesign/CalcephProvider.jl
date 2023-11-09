@@ -1,6 +1,6 @@
 # CalcephEphemeris.jl API
 
-_A lightweight CALCEPH.jl wrapper for the JSMD ecosystem._ 
+_A lightweight CALCEPH wrapper for the JSMD ecosystem._ 
 
 This package is a lightweight wrapper around [CALCEPH_jll.jl](https://github.com/JuliaBinaryWrappers/CALCEPH_jll.jl) that implements the [JSMDInterfaces.jl](https://github.com/JuliaSpaceMissionDesign/JSMDInterfaces.jl) interfaces to extract data from SPICE and INPOP ephemeris kernels. 
 

@@ -1,6 +1,6 @@
 # CalcephEphemeris.jl 
 
-_A lightweight CALCEPH.jl wrapper for the JSMD ecosystem._ 
+_A lightweight CALCEPH wrapper for the JSMD ecosystem._ 
 
 [![Stable Documentation](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliaspacemissiondesign.github.io/CalcephEphemeris.jl/stable/) 
 [![Dev Documentation](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliaspacemissiondesign.github.io/CalcephEphemeris.jl/dev/) 
