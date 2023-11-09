@@ -1,7 +1,7 @@
 name = "CalcephEphemeris"
 uuid = "54e8752a-b65a-4aac-bda5-4918ee1e3cc5"
 authors = ["JSMD Team"]
-version = "1.1.6"
+version = "1.2.0"
 
 [deps]
 CALCEPH_jll = "dd3044d3-6c85-52eb-b239-9fbeaa51d7ac"
