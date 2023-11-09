@@ -23,4 +23,4 @@ julia> Pkg.add("CalcephEphemeris.jl")
 ## Documentation 
 
 For further information on this package and on the CALCEPH library see the package [documentation](https://juliaspacemissiondesign.github.io/CalcephEphemeris.jl/stable/), 
-the official CALCEPH [website](https://www.imcce.fr/inpop/calceph). Inspiration for this package has been taken from the original Julia's [CALCEPH.jll](https://github.com/JuliaAstro/CALCEPH_jll.jl)  wrapper.
+the official CALCEPH [website](https://www.imcce.fr/inpop/calceph). Inspiration for this package has been taken from the original Julia's [CALCEPH.jll](https://github.com/JuliaAstro/CALCEPH.jl)  wrapper.

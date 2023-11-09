@@ -6,7 +6,7 @@ This package is a lightweight wrapper around [CALCEPH_jll.jl](https://github.com
 
 The CALCEPH is a C++ library written by the research team Astronomie et systèmes dynamiques 
 (CNRS/Observatoire de Paris/IMCCE). For further information on CALCEPH visit its 
-[official website](https://www.imcce.fr/inpop/calceph). Inspiration for this package has been taken from the original Julia's [CALCEPH.jll](https://github.com/JuliaAstro/CALCEPH_jll.jl)  wrapper.
+[official website](https://www.imcce.fr/inpop/calceph). Inspiration for this package has been taken from the original Julia's [CALCEPH.jl](https://github.com/JuliaAstro/CALCEPH.jl)  wrapper.
 
 
 ## Installation 
