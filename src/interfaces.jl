@@ -36,7 +36,9 @@ mutable struct CalcephProvider <: jEph.AbstractEphemerisProvider
             (Int, Ptr{Ptr{UInt8}}), length(filepaths), filepaths
         )
 
-        @_check_pointer ptr "Unable to open ephemeris file(s)!"
+        if ptr == C_NULL
+            throw(jEph.EphemerisError("Unable to open the ephemeris file(s)!"))
+        end
         
         # Prefetch the ephemeris data 
         stat = ccall((:calceph_prefetch, libcalceph), Int, (Ptr{Cvoid},), ptr)
@@ -184,6 +186,16 @@ function jEph.ephem_compute!(
     target::Int, center::Int, order::Int,
 )
 
+    # Check the minimum output vector dimension
+    minlen = 3order + 3
+    if length(res) < minlen
+        throw(
+            DimensionMismatch(
+                "the output vector should at least have length $minlen: found $(length(res))"
+            )
+        )
+    end
+    
     # Set the expected units of measure
     unit = useNAIFId + unit_km + unit_sec
 
@@ -209,6 +221,16 @@ end
 function jEph.ephem_orient!(
     res, eph::CalcephProvider, jd0::Number, time::Number, target::Int, ::Int, order::Int
 )
+
+    # Check the minimum output vector dimension
+    minlen = 3order + 3
+    if length(res) < minlen
+        throw(
+            DimensionMismatch(
+                "the output vector should at least have length $minlen: found $(length(res))"
+            )
+        )
+    end
 
     # Set the expected units of measure
     unit = useNAIFId + unit_rad + unit_sec

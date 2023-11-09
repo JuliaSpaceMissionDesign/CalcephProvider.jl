@@ -14,11 +14,3 @@ macro _check_status(stat, msg)
     end
 end
 
-macro _check_pointer(ptr, msg)
-    return quote 
-        if ($(esc(ptr)) == C_NULL)
-            throw(jEph.EphemerisError($(esc(msg))))
-        end
-    end
-end
-
