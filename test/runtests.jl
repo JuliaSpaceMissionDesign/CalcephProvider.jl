@@ -16,6 +16,9 @@ end;
 
     DJ2000 = 2451545.0
 
+    # Test Errors 
+    @test_throws jEphem.EphemerisError CalcephProvider("random_path")
+
     test_dir = artifact"testdata"
 
     path_de432 = joinpath(test_dir, "de432.bsp")
@@ -84,6 +87,10 @@ end;
 
     y = zeros(6)
     yc = zeros(6);
+    
+    # Check dimensions 
+    @test_throws DimensionMismatch jEphem.ephem_compute!(y, de432, 0.0, 0.0, 301, 399, 3)
+    @test_throws DimensionMismatch jEphem.ephem_orient!(y, de432, 0.0, 0.0, 301, 399, 3)
 
     # Point ephemeris tests
     @test_throws jEphem.EphemerisError jEphem.ephem_compute!(y, de432, 0.0, 0.0, 301, 399, 1)
